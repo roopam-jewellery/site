@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Terms and Conditions - Roopam Jewellery - Complete terms for users and plans">
+    <meta name="keywords" content="terms, conditions, policy, roopam jewellery, user terms, plan terms">
+    <title>Terms and Conditions - Roopam Jewellery</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        /* CSS Variables for Terms Page */
+        :root {
+            --primary-blue: #1a365d;
+            --light-blue: #3182ce;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --font-primary: 'Playfair Display', serif;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition-normal: all 0.3s ease;
+        }
+
+        /* Terms and Conditions Specific Styles */
+        .terms-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .terms-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: var(--white);
+            border-radius: 12px;
+        }
+
+        .terms-header h1 {
+            font-family: var(--font-primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .terms-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .terms-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            background: var(--gray-100);
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            transition: var(--transition-normal);
+            position: relative;
+        }
+
+        .tab-button.active {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--gray-200);
+        }
+
+        .tab-button i {
+            margin-right: 0.5rem;
+        }
+
+        .terms-content {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .tab-panel {
+            display: none;
+            padding: 3rem;
+            min-height: 400px;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            color: var(--error-color);
+            text-align: center;
+        }
+
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--error-color);
+        }
+
+        .retry-button {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition-normal);
+        }
+
+        .retry-button:hover {
+            background: var(--light-blue);
+        }
+
+        .terms-rich-content {
+            line-height: 1.7;
+            color: var(--gray-800);
+        }
+
+        .terms-rich-content h1,
+        .terms-rich-content h2,
+        .terms-rich-content h3,
+        .terms-rich-content h4,
+        .terms-rich-content h5,
+        .terms-rich-content h6 {
+            color: var(--primary-blue);
+            margin: 2rem 0 1rem 0;
+            font-family: var(--font-primary);
+        }
+
+        .terms-rich-content h1 { font-size: 2rem; }
+        .terms-rich-content h2 { font-size: 1.75rem; }
+        .terms-rich-content h3 { font-size: 1.5rem; }
+        .terms-rich-content h4 { font-size: 1.25rem; }
+
+        .terms-rich-content p {
+            margin: 1rem 0;
+        }
+
+        .terms-rich-content ul,
+        .terms-rich-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .terms-rich-content li {
+            margin: 0.5rem 0;
+        }
+
+        .terms-rich-content strong {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .terms-rich-content em {
+            color: var(--gray-600);
+        }
+
+        .terms-rich-content blockquote {
+            border-left: 4px solid var(--light-blue);
+            padding: 1rem 2rem;
+            margin: 2rem 0;
+            background: var(--gray-50);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .terms-rich-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+
+        .terms-rich-content th,
+        .terms-rich-content td {
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            text-align: left;
+        }
+
+        .terms-rich-content th {
+            background: var(--gray-100);
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+
+        .terms-metadata {
+            padding: 1.5rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: var(--light-blue);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            transition: var(--transition-normal);
+        }
+
+        .back-to-home:hover {
+            background: var(--primary-blue);
+            transform: translateX(-5px);
+        }
+
+        .back-to-home i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terms-container {
+                padding: 1rem;
+            }
+
+            .terms-header h1 {
+                font-size: 2rem;
+            }
+
+            .terms-tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                padding: 1rem;
+                border-bottom: 1px solid var(--gray-200);
+            }
+
+            .tab-button:last-child {
+                border-bottom: none;
+            }
+
+            .tab-panel {
+                padding: 2rem 1.5rem;
+            }
+
+            .terms-rich-content h1 { font-size: 1.75rem; }
+            .terms-rich-content h2 { font-size: 1.5rem; }
+            .terms-rich-content h3 { font-size: 1.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="terms-container">
+        <a href="index.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i>
+            Back to Home
+        </a>
+
+        <div class="terms-header">
+            <h1>Terms and Conditions</h1>
+            <p>Please review our terms and conditions for users and plans</p>
+        </div>
+
+        <div class="terms-tabs">
+            <button class="tab-button active" data-category="user">
+                <i class="fas fa-user"></i>
+                User Terms
+            </button>
+            <button class="tab-button" data-category="plan">
+                <i class="fas fa-credit-card"></i>
+                Plan Terms
+            </button>
+        </div>
+
+        <div class="terms-content">
+            <div id="user-panel" class="tab-panel active">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading user terms and conditions...</p>
+                </div>
+            </div>
+
+            <div id="plan-panel" class="tab-panel">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading plan terms and conditions...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and Terms Scripts -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, query, where, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        class TermsManager {
+            constructor() {
+                this.db = null;
+                this.termsCache = new Map();
+                this.currentCategory = 'user';
+                this.initialized = false;
+            }
+
+            async initialize() {
+                try {
+                    // Wait for Firebase config to be available
+                    await this.waitForFirebaseConfig();
+                    
+                    // Get Firebase DB from the global manager
+                    this.db = window.getFirebaseDB();
+                    
+                    if (!this.db) {
+                        throw new Error('Firebase database not available');
+                    }
+
+                    this.initialized = true;
+
+                    // Setup tab switching
+                    this.setupTabSwitching();
+
+                    // Load initial content
+                    await this.loadTermsForCategory('user');
+                    
+                } catch (error) {
+                    console.error('Failed to initialize Terms Manager:', error);
+                    this.showError('user', 'Failed to initialize. Please try again.');
+                }
+            }
+
+            async waitForFirebaseConfig() {
+                return new Promise((resolve) => {
+                    const checkConfig = () => {
+                        if (window.isFirebaseInitialized && window.isFirebaseInitialized()) {
+                            resolve();
+                        } else {
+                            setTimeout(checkConfig, 100);
+                        }
+                    };
+                    checkConfig();
+                });
+            }
+
+            setupTabSwitching() {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabPanels = document.querySelectorAll('.tab-panel');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', async () => {
+                        const category = button.dataset.category;
+                        
+                        // Update active states
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabPanels.forEach(panel => panel.classList.remove('active'));
+                        
+                        button.classList.add('active');
+                        document.getElementById(`${category}-panel`).classList.add('active');
+                        
+                        this.currentCategory = category;
+                        
+                        // Load terms for this category if not cached
+                        if (!this.termsCache.has(category)) {
+                            await this.loadTermsForCategory(category);
+                        }
+                    });
+                });
+            }
+
+            async loadTermsForCategory(category) {
+                if (!this.initialized) {
+                    this.showError(category, 'System not initialized');
+                    return;
+                }
+
+                const panel = document.getElementById(`${category}-panel`);
+                this.showLoading(panel);
+
+                try {
+                    // Check if we're in offline mode
+                    if (window.FIREBASE_OFFLINE_MODE) {
+                        this.loadDemoTerms(category);
+                        return;
+                    }
+
+                    // Query Firestore for active terms of this category
+                    const termsRef = this.db.collection('termsAndConditions');
+                    const termsQuery = termsRef
+                        .where('category', '==', category)
+                        .where('isActive', '==', true)
+                        .orderBy('createdAt', 'desc')
+                        .limit(1);
+
+                    const querySnapshot = await termsQuery.get();
+                    
+                    if (querySnapshot.empty) {
+                        this.showError(category, `No active terms found for ${category} category`);
+                        return;
+                    }
+
+                    // Get the first (most recent) active document
+                    const termsDoc = querySnapshot.docs[0];
+                    const termsData = { id: termsDoc.id, ...termsDoc.data() };
+
+                    // Cache the result
+                    this.termsCache.set(category, termsData);
+
+                    // Display the terms
+                    this.displayTerms(category, termsData);
+
+                } catch (error) {
+                    console.error(`Failed to load ${category} terms:`, error);
+                    // Fallback to demo content
+                    this.loadDemoTerms(category);
+                }
+            }
+
+            loadDemoTerms(category) {
+                const demoTerms = {
+                    user: {
+                        id: 'demo-user-terms',
+                        category: 'user',
+                        content: `
+                            <h2>User Terms and Conditions</h2>
+                            <p><em>This is demo content. Please configure Firebase to load actual terms.</em></p>
+                            
+                            <h3>1. Acceptance of Terms</h3>
+                            <p>By accessing and using our services, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                            
+                            <h3>2. User Accounts</h3>
+                            <p>Users are responsible for maintaining the confidentiality of their account information and for all activities under their account.</p>
+                            
+                            <h3>3. Prohibited Uses</h3>
+                            <ul>
+                                <li>Violating any applicable laws or regulations</li>
+                                <li>Transmitting harmful or malicious code</li>
+                                <li>Attempting to gain unauthorized access</li>
+                                <li>Harassment or abuse of other users</li>
+                            </ul>
+                            
+                            <h3>4. Privacy and Data Protection</h3>
+                            <p>Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.</p>
+                            
+                            <h3>5. Limitation of Liability</h3>
+                            <p>Our liability is limited to the maximum extent permitted by law.</p>
+                        `,
+                        isActive: true,
+                        createdAt: new Date(),
+                        createdBy: 'System Administrator'
+                    },
+                    plan: {
+                        id: 'demo-plan-terms',
+                        category: 'plan',
+                        content: `
+                            <h2>Plan Terms and Conditions</h2>
+                            <p><em>This is demo content. Please configure Firebase to load actual terms.</em></p>
+                            
+                            <h3>1. Plan Types</h3>
+                            <p>We offer various subscription plans with different features and pricing tiers.</p>
+                            
+                            <h3>2. Billing and Payment</h3>
+                            <ul>
+                                <li>All payments are processed securely</li>
+                                <li>Subscriptions automatically renew unless cancelled</li>
+                                <li>Refunds are subject to our refund policy</li>
+                            </ul>
+                            
+                            <h3>3. Plan Changes</h3>
+                            <p>You may upgrade or downgrade your plan at any time. Changes take effect at the next billing cycle.</p>
+                            
+                            <h3>4. Cancellation</h3>
+                            <p>You may cancel your subscription at any time. Access to premium features will continue until the end of your current billing period.</p>
+                            
+                            <h3>5. Service Availability</h3>
+                            <p>We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service availability.</p>
+                            
+                            <h3>6. Fair Usage Policy</h3>
+                            <p>All plans are subject to fair usage policies to ensure optimal performance for all users.</p>
+                        `,
+                        isActive: true,
+                        createdAt: new Date(),
+                        createdBy: 'System Administrator'
+                    }
+                };
+
+                const termsData = demoTerms[category];
+                if (termsData) {
+                    this.termsCache.set(category, termsData);
+                    this.displayTerms(category, termsData);
+                } else {
+                    this.showError(category, `Demo terms not available for ${category} category`);
+                }
+            }
+
+            showLoading(panel) {
+                panel.innerHTML = `
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Loading terms and conditions...</p>
+                    </div>
+                `;
+            }
+
+            showError(category, message) {
+                const panel = document.getElementById(`${category}-panel`);
+                panel.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-circle error-icon"></i>
+                        <h3>Unable to Load Terms</h3>
+                        <p>${message}</p>
+                        <button class="retry-button" onclick="termsManager.retryLoad('${category}')">
+                            <i class="fas fa-redo"></i> Try Again
+                        </button>
+                    </div>
+                `;
+            }
+
+            async retryLoad(category) {
+                // Clear cache and reload
+                this.termsCache.delete(category);
+                await this.loadTermsForCategory(category);
+            }
+
+            displayTerms(category, termsData) {
+                const panel = document.getElementById(`${category}-panel`);
+                
+                // Format the creation date
+                const createdDate = termsData.createdAt?.toDate?.() || new Date(termsData.createdAt);
+                const formattedDate = createdDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                panel.innerHTML = `
+                    <div class="terms-rich-content">
+                        ${this.processRichTextContent(termsData.content)}
+                    </div>
+                    <div class="terms-metadata">
+                        <p><strong>Document ID:</strong> ${termsData.id}</p>
+                        <p><strong>Category:</strong> ${category.charAt(0).toUpperCase() + category.slice(1)} Terms</p>
+                        <p><strong>Last Updated:</strong> ${formattedDate}</p>
+                        <p><strong>Created By:</strong> ${termsData.createdBy}</p>
+                        <p><strong>Status:</strong> <span style="color: var(--success-color); font-weight: 600;">Active</span></p>
+                    </div>
+                `;
+            }
+
+            processRichTextContent(content) {
+                if (!content) {
+                    return '<p>No content available.</p>';
+                }
+
+                // If content is already HTML, return as-is (with basic sanitization)
+                if (content.includes('<') && content.includes('>')) {
+                    return this.sanitizeHtml(content);
+                }
+
+                // If content is plain text, convert line breaks to paragraphs
+                return content.split('\n\n').map(paragraph => 
+                    paragraph.trim() ? `<p>${paragraph.replace(/\n/g, '<br>')}</p>` : ''
+                ).join('');
+            }
+
+            sanitizeHtml(html) {
+                // Basic HTML sanitization - remove potentially dangerous tags
+                const allowedTags = [
+                    'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                    'ul', 'ol', 'li', 'strong', 'em', 'u', 'i', 'b',
+                    'blockquote', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
+                    'div', 'span', 'a'
+                ];
+
+                // This is a basic implementation - in production, consider using a proper HTML sanitization library
+                let sanitized = html;
+                
+                // Remove script tags and their content
+                sanitized = sanitized.replace(/<script[^>]*>.*?<\/script>/gis, '');
+                
+                // Remove on* event attributes
+                sanitized = sanitized.replace(/\s*on\w+\s*=\s*["'][^"']*["']/gi, '');
+                
+                // Remove javascript: links
+                sanitized = sanitized.replace(/href\s*=\s*["']javascript:[^"']*["']/gi, '');
+
+                return sanitized;
+            }
+        }
+
+        // Initialize Terms Manager when page loads
+        window.termsManager = new TermsManager();
+        
+        // Wait for Firebase config to be available and initialize
+        const initializeWhenReady = () => {
+            if (window.isFirebaseInitialized && window.isFirebaseInitialized()) {
+                termsManager.initialize();
+            } else {
+                // Keep checking until Firebase is ready
+                setTimeout(initializeWhenReady, 200);
+            }
+        };
+
+        // Start initialization check
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeWhenReady);
+        } else {
+            initializeWhenReady();
+        }
+    </script>
+
+    <!-- Firebase Config Script - Load first -->
+    <script src="assets/js/firebase-config.js"></script>
+</body>
+</html>
