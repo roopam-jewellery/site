@@ -17,8 +17,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Main Stylesheet -->
+    <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/page-templates.css">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -29,52 +30,7 @@
     <script src="assets/js/firebase-env.js"></script>
     
     <style>
-        /* CSS Variables for Terms Page */
-        :root {
-            --primary-blue: #1a365d;
-            --light-blue: #3182ce;
-            --white: #ffffff;
-            --gray-50: #f9fafb;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-600: #4b5563;
-            --gray-700: #374151;
-            --gray-800: #1f2937;
-            --success-color: #10b981;
-            --error-color: #ef4444;
-            --font-primary: 'Playfair Display', serif;
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --transition-normal: all 0.3s ease;
-        }
-
-        /* Terms and Conditions Specific Styles */
-        .terms-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .terms-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
-            color: var(--white);
-            border-radius: 12px;
-        }
-
-        .terms-header h1 {
-            font-family: var(--font-primary);
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .terms-header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
+        /* Terms Page Specific Styles */
         .terms-tabs {
             display: flex;
             margin-bottom: 2rem;
@@ -110,13 +66,6 @@
             margin-right: 0.5rem;
         }
 
-        .terms-content {
-            background: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
-
         .tab-panel {
             display: none;
             padding: 3rem;
@@ -125,62 +74,6 @@
 
         .tab-panel.active {
             display: block;
-        }
-
-        .loading-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 2rem;
-            color: var(--gray-600);
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--gray-200);
-            border-top: 4px solid var(--primary-blue);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 2rem;
-            color: var(--error-color);
-            text-align: center;
-        }
-
-        .error-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--error-color);
-        }
-
-        .retry-button {
-            margin-top: 1rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--primary-blue);
-            color: var(--white);
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: var(--transition-normal);
-        }
-
-        .retry-button:hover {
-            background: var(--light-blue);
         }
 
         .terms-rich-content {
@@ -235,25 +128,6 @@
             border-radius: 0 8px 8px 0;
         }
 
-        .terms-rich-content table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 2rem 0;
-        }
-
-        .terms-rich-content th,
-        .terms-rich-content td {
-            padding: 1rem;
-            border: 1px solid var(--gray-200);
-            text-align: left;
-        }
-
-        .terms-rich-content th {
-            background: var(--gray-100);
-            font-weight: 600;
-            color: var(--primary-blue);
-        }
-
         .terms-metadata {
             padding: 1.5rem;
             background: var(--gray-50);
@@ -262,37 +136,24 @@
             color: var(--gray-600);
         }
 
-        .back-to-home {
-            display: inline-flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: var(--light-blue);
+        .retry-button {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary-blue);
             color: var(--white);
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
             transition: var(--transition-normal);
         }
 
-        .back-to-home:hover {
-            background: var(--primary-blue);
-            transform: translateX(-5px);
-        }
-
-        .back-to-home i {
-            margin-right: 0.5rem;
+        .retry-button:hover {
+            background: var(--light-blue);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .terms-container {
-                padding: 1rem;
-            }
-
-            .terms-header h1 {
-                font-size: 2rem;
-            }
-
             .terms-tabs {
                 flex-direction: column;
             }
@@ -317,47 +178,148 @@
     </style>
 </head>
 <body>
-    <div class="terms-container">
-        <a href="index.html" class="back-to-home">
-            <i class="fas fa-arrow-left"></i>
-            Back to Home
-        </a>
-
-        <div class="terms-header">
-            <h1>Terms and Conditions</h1>
-            <p>Please review our terms and conditions for users and plans</p>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Loading...</h2>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#products" class="nav-link">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#services" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#about" class="nav-link">About Us</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#faq" class="nav-link">FAQ</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#privacy" class="nav-link">Privacy</a>
+                </li>
+                <li class="nav-item">
+                    <a href="terms-and-conditions.html" class="nav-link active">Terms</a>
+                </li>
+                <li class="nav-item">
+                    <a href="index.html#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
+    </nav>
 
-        <div class="terms-tabs">
-            <button class="tab-button active" data-category="user">
-                <i class="fas fa-user"></i>
-                User Terms
-            </button>
-            <button class="tab-button" data-category="plan">
-                <i class="fas fa-credit-card"></i>
-                Plan Terms
-            </button>
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="index.html">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="current">Terms & Conditions</span>
+            </nav>
+            <div class="hero-content">
+                <h1>Terms and Conditions</h1>
+                <p>Please review our comprehensive terms and conditions for users and subscription plans</p>
+            </div>
         </div>
+    </section>
 
-        <div class="terms-content">
-            <div id="user-panel" class="tab-panel active">
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <p>Loading user terms and conditions...</p>
-                </div>
+    <!-- Terms and Conditions Section -->
+    <section class="content-section">
+        <div class="container">
+            <div class="terms-tabs">
+                <button class="tab-button active" data-category="user">
+                    <i class="fas fa-user"></i>
+                    User Terms
+                </button>
+                <button class="tab-button" data-category="plan">
+                    <i class="fas fa-credit-card"></i>
+                    Plan Terms
+                </button>
             </div>
 
-            <div id="plan-panel" class="tab-panel">
-                <div class="loading-state">
-                    <div class="loading-spinner"></div>
-                    <p>Loading plan terms and conditions...</p>
+            <div class="page-content">
+                <div id="user-panel" class="tab-panel active">
+                    <div class="page-loading">
+                        <div class="page-loading-spinner"></div>
+                        <p>Loading user terms and conditions...</p>
+                    </div>
+                </div>
+
+                <div id="plan-panel" class="tab-panel">
+                    <div class="page-loading">
+                        <div class="page-loading-spinner"></div>
+                        <p>Loading plan terms and conditions...</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Firebase Config Script - Load first -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Roopam Jewellery</h3>
+                    <p>Crafting memories that last a lifetime with exceptional quality and unparalleled service.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#products">Products</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="index.html#services">Custom Design</a></li>
+                        <li><a href="index.html#services">Repair & Restoration</a></li>
+                        <!-- <li><a href="index.html#services">Appraisal</a></li> -->
+                        <li><a href="index.html#services">Wedding Collections</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> Loading address...</p>
+                    <p><i class="fas fa-phone"></i> Loading phone...</p>
+                    <!-- <p><i class="fas fa-envelope"></i> Loading email...</p> -->
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Roopam Jewellery. All rights reserved. | <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-and-conditions.html">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/config-manager.js"></script>
+    <script src="assets/js/content-injector.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/page-template.js"></script>
     
     <!-- Terms Manager Script -->
     <script>
@@ -604,8 +566,8 @@
 
             showLoading(panel) {
                 panel.innerHTML = `
-                    <div class="loading-state">
-                        <div class="loading-spinner"></div>
+                    <div class="page-loading">
+                        <div class="page-loading-spinner"></div>
                         <p>Loading terms and conditions...</p>
                     </div>
                 `;
@@ -614,8 +576,8 @@
             showError(category, message) {
                 const panel = document.getElementById(`${category}-panel`);
                 panel.innerHTML = `
-                    <div class="error-state">
-                        <i class="fas fa-exclamation-circle error-icon"></i>
+                    <div class="page-error">
+                        <i class="fas fa-exclamation-circle page-error-icon"></i>
                         <h3>Unable to Load Terms</h3>
                         <p>${message}</p>
                         <button class="retry-button" onclick="termsManager.retryLoad('${category}')">
@@ -647,6 +609,13 @@
                 panel.innerHTML = `
                     <div class="terms-rich-content">
                         ${this.processRichTextContent(termsData.content)}
+                    </div>
+                    <div class="terms-metadata">
+                        <p><strong>Document ID:</strong> ${termsData.id}</p>
+                        <p><strong>Category:</strong> ${category.charAt(0).toUpperCase() + category.slice(1)} Terms</p>
+                        <p><strong>Last Updated:</strong> ${formattedDate}</p>
+                        <p><strong>Created By:</strong> ${termsData.createdBy}</p>
+                        <p><strong>Status:</strong> <span style="color: var(--success-color); font-weight: 600;">Active</span></p>
                     </div>
                 `;
             }
@@ -826,19 +795,13 @@
         // Initialize Terms Manager
         window.termsManager = new TermsManager();
         
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                // Give Firebase more time to initialize first
-                setTimeout(() => {
-                    termsManager.initialize();
-                }, 1000); // Increased from 500ms to 1000ms
-            });
-        } else {
+        // Initialize when DOM is ready and after other scripts
+        document.addEventListener('DOMContentLoaded', () => {
+            // Give Firebase and other systems time to initialize first
             setTimeout(() => {
                 termsManager.initialize();
-            }, 1000); // Increased from 500ms to 1000ms
-        }
+            }, 1500); // Increased delay for better compatibility
+        });
     </script>
 </body>
 </html>
