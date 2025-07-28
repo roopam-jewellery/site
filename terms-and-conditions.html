@@ -347,32 +347,27 @@
         </div>
     </div>
 
-    <!-- Firebase and Terms Scripts -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, query, where, getDocs, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
+    <!-- Firebase Config Script - Load first -->
+    <script src="assets/js/firebase-config.js"></script>
+    
+    <!-- Terms Manager Script -->
+    <script>
         class TermsManager {
             constructor() {
-                this.db = null;
                 this.termsCache = new Map();
                 this.currentCategory = 'user';
                 this.initialized = false;
+                this.retryCount = 0;
+                this.maxRetries = 3;
             }
 
             async initialize() {
                 try {
-                    // Wait for Firebase config to be available
-                    await this.waitForFirebaseConfig();
+                    // Wait for Firebase to be ready
+                    await this.waitForFirebase();
                     
-                    // Get Firebase DB from the global manager
-                    this.db = window.getFirebaseDB();
-                    
-                    if (!this.db) {
-                        throw new Error('Firebase database not available');
-                    }
-
                     this.initialized = true;
+                    console.log('Terms Manager initialized successfully');
 
                     // Setup tab switching
                     this.setupTabSwitching();
@@ -382,20 +377,38 @@
                     
                 } catch (error) {
                     console.error('Failed to initialize Terms Manager:', error);
-                    this.showError('user', 'Failed to initialize. Please try again.');
+                    this.showError('user', 'Failed to initialize. Loading demo content.');
+                    this.loadDemoTerms('user');
                 }
             }
 
-            async waitForFirebaseConfig() {
-                return new Promise((resolve) => {
-                    const checkConfig = () => {
-                        if (window.isFirebaseInitialized && window.isFirebaseInitialized()) {
-                            resolve();
-                        } else {
-                            setTimeout(checkConfig, 100);
+            async waitForFirebase() {
+                return new Promise((resolve, reject) => {
+                    let attempts = 0;
+                    const maxAttempts = 50; // 5 seconds max wait
+                    
+                    const checkFirebase = () => {
+                        attempts++;
+                        
+                        if (window.getFirebaseDB && typeof window.getFirebaseDB === 'function') {
+                            const db = window.getFirebaseDB();
+                            if (db) {
+                                console.log('Firebase ready for Terms Manager');
+                                resolve(db);
+                                return;
+                            }
                         }
+                        
+                        if (attempts >= maxAttempts) {
+                            console.warn('Firebase not ready after max attempts, using demo mode');
+                            resolve(null);
+                            return;
+                        }
+                        
+                        setTimeout(checkFirebase, 100);
                     };
-                    checkConfig();
+                    
+                    checkFirebase();
                 });
             }
 
@@ -425,39 +438,44 @@
             }
 
             async loadTermsForCategory(category) {
-                if (!this.initialized) {
-                    this.showError(category, 'System not initialized');
-                    return;
-                }
-
                 const panel = document.getElementById(`${category}-panel`);
                 this.showLoading(panel);
 
                 try {
-                    // Check if we're in offline mode
-                    if (window.FIREBASE_OFFLINE_MODE) {
+                    // Get Firebase database
+                    const db = window.getFirebaseDB();
+                    
+                    if (!db || window.FIREBASE_OFFLINE_MODE) {
+                        console.log('Firebase not available, loading demo content');
                         this.loadDemoTerms(category);
                         return;
                     }
 
-                    // Query Firestore for active terms of this category
-                    const termsRef = this.db.collection('termsAndConditions');
-                    const termsQuery = termsRef
+                    // Query Firestore using existing framework
+                    console.log(`Loading ${category} terms from Firebase...`);
+                    
+                    const termsRef = db.collection('termsAndConditions');
+                    const querySnapshot = await termsRef
                         .where('category', '==', category)
                         .where('isActive', '==', true)
                         .orderBy('createdAt', 'desc')
-                        .limit(1);
-
-                    const querySnapshot = await termsQuery.get();
+                        .limit(1)
+                        .get();
                     
                     if (querySnapshot.empty) {
-                        this.showError(category, `No active terms found for ${category} category`);
+                        console.log(`No active ${category} terms found, showing demo content`);
+                        this.loadDemoTerms(category);
                         return;
                     }
 
                     // Get the first (most recent) active document
                     const termsDoc = querySnapshot.docs[0];
-                    const termsData = { id: termsDoc.id, ...termsDoc.data() };
+                    const termsData = { 
+                        id: termsDoc.id, 
+                        ...termsDoc.data() 
+                    };
+
+                    console.log(`Loaded ${category} terms:`, termsData);
 
                     // Cache the result
                     this.termsCache.set(category, termsData);
@@ -467,8 +485,15 @@
 
                 } catch (error) {
                     console.error(`Failed to load ${category} terms:`, error);
-                    // Fallback to demo content
-                    this.loadDemoTerms(category);
+                    this.retryCount++;
+                    
+                    if (this.retryCount < this.maxRetries) {
+                        console.log(`Retrying... (${this.retryCount}/${this.maxRetries})`);
+                        setTimeout(() => this.loadTermsForCategory(category), 2000);
+                    } else {
+                        console.log('Max retries reached, showing demo content');
+                        this.loadDemoTerms(category);
+                    }
                 }
             }
 
@@ -479,10 +504,10 @@
                         category: 'user',
                         content: `
                             <h2>User Terms and Conditions</h2>
-                            <p><em>This is demo content. Please configure Firebase to load actual terms.</em></p>
+                            <p><em>Demo content - Configure Firebase to load actual terms</em></p>
                             
                             <h3>1. Acceptance of Terms</h3>
-                            <p>By accessing and using our services, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                            <p>By accessing and using Roopam Jewellery's services, you accept and agree to be bound by the terms and provisions of this agreement.</p>
                             
                             <h3>2. User Accounts</h3>
                             <p>Users are responsible for maintaining the confidentiality of their account information and for all activities under their account.</p>
@@ -493,13 +518,17 @@
                                 <li>Transmitting harmful or malicious code</li>
                                 <li>Attempting to gain unauthorized access</li>
                                 <li>Harassment or abuse of other users</li>
+                                <li>Using our services for fraudulent purposes</li>
                             </ul>
                             
                             <h3>4. Privacy and Data Protection</h3>
                             <p>Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and protect your information.</p>
                             
-                            <h3>5. Limitation of Liability</h3>
-                            <p>Our liability is limited to the maximum extent permitted by law.</p>
+                            <h3>5. Intellectual Property</h3>
+                            <p>All content, including but not limited to text, graphics, logos, and images, is the property of Roopam Jewellery and is protected by intellectual property laws.</p>
+                            
+                            <h3>6. Limitation of Liability</h3>
+                            <p>Our liability is limited to the maximum extent permitted by law. We are not responsible for any indirect or consequential damages.</p>
                         `,
                         isActive: true,
                         createdAt: new Date(),
@@ -510,29 +539,33 @@
                         category: 'plan',
                         content: `
                             <h2>Plan Terms and Conditions</h2>
-                            <p><em>This is demo content. Please configure Firebase to load actual terms.</em></p>
+                            <p><em>Demo content - Configure Firebase to load actual terms</em></p>
                             
-                            <h3>1. Plan Types</h3>
-                            <p>We offer various subscription plans with different features and pricing tiers.</p>
+                            <h3>1. Plan Types and Features</h3>
+                            <p>Roopam Jewellery offers various subscription plans with different features and pricing tiers to suit your needs.</p>
                             
                             <h3>2. Billing and Payment</h3>
                             <ul>
-                                <li>All payments are processed securely</li>
-                                <li>Subscriptions automatically renew unless cancelled</li>
-                                <li>Refunds are subject to our refund policy</li>
+                                <li>All payments are processed securely through trusted payment gateways</li>
+                                <li>Subscriptions automatically renew unless cancelled before the next billing cycle</li>
+                                <li>All prices are inclusive of applicable taxes</li>
+                                <li>Refunds are subject to our refund policy and applicable terms</li>
                             </ul>
                             
-                            <h3>3. Plan Changes</h3>
-                            <p>You may upgrade or downgrade your plan at any time. Changes take effect at the next billing cycle.</p>
+                            <h3>3. Plan Changes and Upgrades</h3>
+                            <p>You may upgrade or downgrade your plan at any time. Changes take effect at the next billing cycle, and you'll be charged the difference in plan costs.</p>
                             
-                            <h3>4. Cancellation</h3>
-                            <p>You may cancel your subscription at any time. Access to premium features will continue until the end of your current billing period.</p>
+                            <h3>4. Cancellation Policy</h3>
+                            <p>You may cancel your subscription at any time through your account settings. Access to premium features will continue until the end of your current billing period.</p>
                             
-                            <h3>5. Service Availability</h3>
-                            <p>We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service availability.</p>
+                            <h3>5. Service Availability and Uptime</h3>
+                            <p>We strive to maintain 99.9% uptime but cannot guarantee uninterrupted service availability due to maintenance, updates, or unforeseen circumstances.</p>
                             
                             <h3>6. Fair Usage Policy</h3>
-                            <p>All plans are subject to fair usage policies to ensure optimal performance for all users.</p>
+                            <p>All plans are subject to fair usage policies to ensure optimal performance for all users. Excessive usage may result in temporary limitations.</p>
+                            
+                            <h3>7. Plan-Specific Features</h3>
+                            <p>Certain features are only available with specific plans. Please refer to our plan comparison page for detailed feature lists.</p>
                         `,
                         isActive: true,
                         createdAt: new Date(),
@@ -573,7 +606,7 @@
             }
 
             async retryLoad(category) {
-                // Clear cache and reload
+                this.retryCount = 0; // Reset retry count
                 this.termsCache.delete(category);
                 await this.loadTermsForCategory(category);
             }
@@ -623,14 +656,6 @@
 
             sanitizeHtml(html) {
                 // Basic HTML sanitization - remove potentially dangerous tags
-                const allowedTags = [
-                    'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                    'ul', 'ol', 'li', 'strong', 'em', 'u', 'i', 'b',
-                    'blockquote', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
-                    'div', 'span', 'a'
-                ];
-
-                // This is a basic implementation - in production, consider using a proper HTML sanitization library
                 let sanitized = html;
                 
                 // Remove script tags and their content
@@ -646,28 +671,22 @@
             }
         }
 
-        // Initialize Terms Manager when page loads
+        // Initialize Terms Manager
         window.termsManager = new TermsManager();
         
-        // Wait for Firebase config to be available and initialize
-        const initializeWhenReady = () => {
-            if (window.isFirebaseInitialized && window.isFirebaseInitialized()) {
-                termsManager.initialize();
-            } else {
-                // Keep checking until Firebase is ready
-                setTimeout(initializeWhenReady, 200);
-            }
-        };
-
-        // Start initialization check
+        // Initialize when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeWhenReady);
+            document.addEventListener('DOMContentLoaded', () => {
+                // Give Firebase time to initialize first
+                setTimeout(() => {
+                    termsManager.initialize();
+                }, 500);
+            });
         } else {
-            initializeWhenReady();
+            setTimeout(() => {
+                termsManager.initialize();
+            }, 500);
         }
     </script>
-
-    <!-- Firebase Config Script - Load first -->
-    <script src="assets/js/firebase-config.js"></script>
 </body>
 </html>
