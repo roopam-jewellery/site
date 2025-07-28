@@ -32,8 +32,15 @@
 
     // Smooth scrolling for navigation links
     function handleNavLinkClick(e) {
-        e.preventDefault();
         const targetId = this.getAttribute('href');
+        
+        // Only handle internal links (starting with #)
+        if (!targetId.startsWith('#')) {
+            // Allow external links to work normally
+            return;
+        }
+        
+        e.preventDefault();
         const targetSection = document.querySelector(targetId);
         
         if (targetSection) {

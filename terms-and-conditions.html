@@ -648,19 +648,29 @@
                     <div class="terms-rich-content">
                         ${this.processRichTextContent(termsData.content)}
                     </div>
-                    <div class="terms-metadata">
-                        <p><strong>Document ID:</strong> ${termsData.id}</p>
-                        <p><strong>Category:</strong> ${category.charAt(0).toUpperCase() + category.slice(1)} Terms</p>
-                        <p><strong>Last Updated:</strong> ${formattedDate}</p>
-                        <p><strong>Created By:</strong> ${termsData.createdBy}</p>
-                        <p><strong>Status:</strong> <span style="color: var(--success-color); font-weight: 600;">Active</span></p>
-                    </div>
                 `;
             }
 
             processRichTextContent(content) {
                 if (!content) {
                     return '<p>No content available.</p>';
+                }
+
+                // Check if content is Quill Delta format (array of operations)
+                if (Array.isArray(content)) {
+                    return this.convertQuillDeltaToHtml(content);
+                }
+
+                // Check if content is JSON string of Quill Delta
+                if (typeof content === 'string' && content.startsWith('[')) {
+                    try {
+                        const deltaOps = JSON.parse(content);
+                        if (Array.isArray(deltaOps)) {
+                            return this.convertQuillDeltaToHtml(deltaOps);
+                        }
+                    } catch (e) {
+                        console.warn('Failed to parse rich text content as JSON:', e);
+                    }
                 }
 
                 // If content is already HTML, return as-is (with basic sanitization)
@@ -672,6 +682,128 @@
                 return content.split('\n\n').map(paragraph => 
                     paragraph.trim() ? `<p>${paragraph.replace(/\n/g, '<br>')}</p>` : ''
                 ).join('');
+            }
+
+            convertQuillDeltaToHtml(deltaOps) {
+                let html = '';
+                let currentText = '';
+                let isInParagraph = false;
+
+                const flushText = () => {
+                    if (currentText.trim()) {
+                        if (!isInParagraph) {
+                            html += '<p>';
+                            isInParagraph = true;
+                        }
+                        html += currentText;
+                        currentText = '';
+                    }
+                };
+
+                const closeParagraph = () => {
+                    if (isInParagraph) {
+                        html += '</p>';
+                        isInParagraph = false;
+                    }
+                };
+
+                deltaOps.forEach((op, index) => {
+                    if (op.insert) {
+                        let text = op.insert;
+                        
+                        // Handle newlines
+                        if (text.includes('\n')) {
+                            const parts = text.split('\n');
+                            
+                            parts.forEach((part, partIndex) => {
+                                if (part.trim()) {
+                                    // Apply formatting attributes
+                                    let formattedText = this.applyQuillFormatting(part, op.attributes || {});
+                                    currentText += formattedText;
+                                }
+                                
+                                // Handle newlines (except for the last empty part)
+                                if (partIndex < parts.length - 1) {
+                                    // Check if this is a paragraph break (double newline) or line break
+                                    const nextPart = parts[partIndex + 1];
+                                    if (!nextPart.trim() && partIndex < parts.length - 2) {
+                                        // Double newline - paragraph break
+                                        flushText();
+                                        closeParagraph();
+                                    } else {
+                                        // Single newline - line break
+                                        flushText();
+                                        if (isInParagraph) {
+                                            html += '<br>';
+                                        }
+                                    }
+                                }
+                            });
+                        } else {
+                            // No newlines, just apply formatting
+                            let formattedText = this.applyQuillFormatting(text, op.attributes || {});
+                            currentText += formattedText;
+                        }
+                    }
+                });
+
+                // Flush any remaining text
+                flushText();
+                closeParagraph();
+
+                return html || '<p>No content available.</p>';
+            }
+
+            applyQuillFormatting(text, attributes) {
+                let formatted = text;
+
+                // Apply formatting attributes
+                if (attributes.bold || attributes.b) {
+                    formatted = `<strong>${formatted}</strong>`;
+                }
+                if (attributes.italic || attributes.i) {
+                    formatted = `<em>${formatted}</em>`;
+                }
+                if (attributes.underline || attributes.u) {
+                    formatted = `<u>${formatted}</u>`;
+                }
+                if (attributes.strike) {
+                    formatted = `<s>${formatted}</s>`;
+                }
+                if (attributes.code) {
+                    formatted = `<code>${formatted}</code>`;
+                }
+                if (attributes.link) {
+                    formatted = `<a href="${attributes.link}" target="_blank" rel="noopener noreferrer">${formatted}</a>`;
+                }
+                if (attributes.color) {
+                    formatted = `<span style="color: ${attributes.color}">${formatted}</span>`;
+                }
+                if (attributes.background) {
+                    formatted = `<span style="background-color: ${attributes.background}">${formatted}</span>`;
+                }
+
+                // Handle headers
+                if (attributes.header) {
+                    const level = Math.min(Math.max(parseInt(attributes.header) || 1, 1), 6);
+                    formatted = `<h${level}>${formatted}</h${level}>`;
+                }
+
+                // Handle lists (basic support)
+                if (attributes.list) {
+                    if (attributes.list === 'ordered') {
+                        formatted = `<ol><li>${formatted}</li></ol>`;
+                    } else {
+                        formatted = `<ul><li>${formatted}</li></ul>`;
+                    }
+                }
+
+                // Handle blockquote
+                if (attributes.blockquote) {
+                    formatted = `<blockquote>${formatted}</blockquote>`;
+                }
+
+                return formatted;
             }
 
             sanitizeHtml(html) {
