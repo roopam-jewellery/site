@@ -474,7 +474,7 @@
                     // Query Firestore using existing framework
                     console.log(`Loading ${category} terms from Firebase...`);
                     
-                    const termsRef = db.collection('termsAndConditions');
+                    const termsRef = db.collection('terms_and_conditions');
                     const querySnapshot = await termsRef
                         .where('category', '==', category)
                         .where('isActive', '==', true)
